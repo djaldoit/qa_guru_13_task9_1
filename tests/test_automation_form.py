@@ -53,7 +53,7 @@ class RegistrationPage:
         if state == 'NCR':
             browser.element('#state').click().element('#react-select-3-option-0').click()
             if cities == 'Delhi':
-                    browser.element('#city').click().element('#react-select-4-option-0').click()
+                browser.element('#city').click().element('#react-select-4-option-0').click()
             if cities == 'Gurgaon':
                 browser.element('#city').click().element('#react-select-4-option-1').click()
             if cities == 'Noida':
