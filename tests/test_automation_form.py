@@ -85,6 +85,9 @@ class RegistrationPage:
     def should_user(self):
         return browser.element('.table').all('td').even
 
+    def browser_close(self):
+        return browser.element('#closeLargeModal').click()
+
 
 def test_automation_form():
     page = RegistrationPage()
@@ -114,8 +117,7 @@ def test_automation_form():
         )
     )
 
-    # #Close
-    # browser.element('#closeLargeModal').click()
+    page.browser_close()
 
 
 
