@@ -1,101 +1,101 @@
 import os
 from selene import browser, have
+from page.user import User
+from selene import have, browser
+import os
 
 
 class RegistrationPage:
-
-    # Open
     def open_browser(self):
         browser.open('/automation-practice-form')
+        return self
 
-    # Registration
-    def user_registration(self,
-                          first_name,
-                          last_name,
-                          email,
-                          gender,
-                          number,
-                          day,
-                          month,
-                          year,
-                          subject,
-                          direct,
-                          address,
-                          state,
-                          city,
-                          ):
+    def fill_name(self, name):
+        browser.element('#firstName').type(name)
+        return self
 
-        # Full name, email
-        browser.element('#firstName').type(first_name)
+    def fill_last_name(self, last_name):
         browser.element('#lastName').type(last_name)
+        return self
+
+    def fill_email(self,email):
         browser.element('#userEmail').type(email)
+        return self
 
-        # Gender
-        if gender == 'Male':
-            browser.element('[for="gender-radio-1"]').click()
-        elif gender == 'Female':
-            browser.element('[for="gender-radio-2"]').click()
-        else:
-            browser.element('[for="gender-radio-3"]').click()
+    def fill_gender(self, gender):
+        gender = 1
+        browser.element(f'[for="gender-radio-{gender}"]').click()
+        return self
 
-        # Date of birth
+    def fill_user_number(self, number):
         browser.element('#userNumber').type(number)
+        return self
+
+    def data_birth(self, day, month, year):
         browser.element('#dateOfBirthInput').click()
-        browser.element('.react-datepicker__month-select').type(month).click()
-        browser.element('.react-datepicker__year-select').type(year).click()
+        browser.element('.react-datepicker__month-select').type(month)
+        browser.element('.react-datepicker__year-select').type(year)
         browser.element(
             f'.react-datepicker__day--0{day}:not(.react-datepicker__day--outside-month)').click()
+        return self
 
-        # Subjects
-        browser.element('#subjectsInput').type(subject).press_enter()
-        for value in subject:
-            if value == 'Sports':
-                browser.all('.custom-checkbox').element_by(have.exact_text('Sport')).click()
-            elif value == 'Reading':
-                browser.all('.custom-checkbox').element_by(have.exact_text('Reading')).click()
-            elif value == 'Music':
-                browser.all('.custom-checkbox').element_by(have.exact_text('Music')).click()
+    def subjects(self, value):
+        browser.element('#subjectsInput').type(value).press_enter()
+        return self
 
-        # Directory file
-        browser.element('#uploadPicture').send_keys(os.path.abspath(direct))
+    def hobbies(self, hobbies):
+        browser.all('.custom-checkbox').element_by(have.exact_text(hobbies)).click()
+        return self
 
-        # Address
+    def upload_picture(self, file):
+        browser.element('#uploadPicture').send_keys(os.path.abspath(f'./images/{file}'))
+        return self
+
+    def fill_user_address(self, address):
         browser.element('#currentAddress').type(address)
+        return self
 
-        # State and city
-        if state == 'NCR':
-            browser.element('#state').click().element('#react-select-3-option-0').click()
-            if city == 'Delhi':
-                browser.element('#city').click().element('#react-select-4-option-0').click()
-            if city == 'Gurgaon':
-                browser.element('#city').click().element('#react-select-4-option-1').click()
-            if city == 'Noida':
-                browser.element('#city').click().element('#react-select-4-option-2').click()
-        elif state == 'Uttar Pradesh':
-            browser.element('#state').click().element('#react-select-3-option-1').click()
-            if city == 'Agra':
-                browser.element('#city').click().element('#react-select-4-option-0').click()
-            if city == 'Lucknow':
-                browser.element('#city').click().element('#react-select-4-option-1').click()
-            if city == 'Merrut':
-                browser.element('#city').click().element('#react-select-4-option-2').click()
-        elif state == 'Haryana':
-            browser.element('#state').click().element('#react-select-3-option-2').click()
-            if city == 'Karnal':
-                browser.element('#city').click().element('#react-select-4-option-0').click()
-            if city == 'Panipat':
-                browser.element('#city').click().element('#react-select-4-option-1').click()
-        elif state == 'Rajasthan':
-            browser.element('#state').click().element('#react-select-3-option-3').click()
-            if city == 'Jaipur':
-                browser.element('#city').click().element('#react-select-4-option-0').click()
-            if city == 'Jaiselmer':
-                browser.element('#city').click().element('#react-select-4-option-1').click()
+    def choice_state(self,):
+        browser.element('#state').click().element('#react-select-3-option-1').click()
+        return self
 
-    # Submit
+    def choice_city(self):
+        browser.element('#city').click().element('#react-select-4-option-0').click()
+        return self
+
     def submit(self):
-        return browser.element('#submit').press_enter()
+        browser.element('#submit').click()
+        return self
 
-    # Should
-    def should_user(self):
-        return browser.element('.table').all('td').even
+    def register_user(self, user: User):
+        self.fill_name(user.name)
+        self.fill_last_name(user.last_name)
+        self.fill_email(user.email)
+        self.fill_user_number(user.number)
+        self.fill_gender(user.gender)
+        self.fill_user_number(user.picture)
+        self.data_birth(user.day, user.month, user.year)
+        self.subjects(user.subjects)
+        self.hobbies(user.hobbies)
+        self.upload_picture(user.picture)
+        self.fill_user_address(user.address)
+        self.choice_state()
+        self.choice_city()
+        return self
+
+    def should_user(self, user: User):
+        browser.element('.table').all('td').even.should(
+            have.exact_texts(
+                f'{user.name} {user.last_name}',
+                user.email,
+                user.gender,
+                user.number,
+                f'{user.day} {user.month},{user.year}',
+                user.subjects,
+                user.hobbies,
+                user.picture,
+                user.address,
+                f'{user.state} {user.city}'
+            )
+        )
+

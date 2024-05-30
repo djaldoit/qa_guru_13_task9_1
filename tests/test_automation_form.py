@@ -1,29 +1,29 @@
-from selene import have
+from page.user import User
 from page.registration_page import RegistrationPage
 
-page = RegistrationPage()
-user1 = ('Piter',
-         'Parker',
-         'spiderman@example.com',
-         'Male',
-         '1234567890',
-         28,
-         'May',
-         '1995',
-         'Reading',
-         './images/111.jpg',
-         'Vladimir Street 12',
-         'Haryana',
-         'Karnal'
-         )
 
+def test_user_form():
+    page = RegistrationPage()
+    user = User('Piter',
+                'Parker',
+                'spiderman@gmail.com',
+                'Male',
+                '1234567890',
+                '12',
+                'May',
+                '1995',
+                'English',
+                'Music',
+                '111.jpg',
+                'Vladimir street 12',
+                'Uttar Pradesh',
+                'Agra'
+            )
 
-def test_automation_form():
     page.open_browser()
-    page.user_registration(*user1)
+    page.register_user(user)
     page.submit()
-    page.should_user().should(have.text(*user1))
-
+    page.should_user(user)
 
 
 
