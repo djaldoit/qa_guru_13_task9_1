@@ -1,4 +1,4 @@
-from page.registration_page import RegistrationPage
+from pages.registration_page import RegistrationPage
 
 
 def test_automation_form():
