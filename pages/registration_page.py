@@ -1,6 +1,4 @@
-import os
-from selene import browser, have
-from page.user import User
+from data.user import User
 from selene import have, browser
 import os
 
@@ -18,13 +16,13 @@ class RegistrationPage:
         browser.element('#lastName').type(last_name)
         return self
 
-    def fill_email(self,email):
+    def fill_email(self, email):
         browser.element('#userEmail').type(email)
         return self
 
     def fill_gender(self, gender):
-        gender = 1
-        browser.element(f'[for="gender-radio-{gender}"]').click()
+        browser.all('.custom-control-label').element_by(
+            have.exact_text(gender)).click()
         return self
 
     def fill_user_number(self, number):

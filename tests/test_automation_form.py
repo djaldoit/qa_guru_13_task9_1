@@ -1,5 +1,5 @@
-from page.user import User
-from page.registration_page import RegistrationPage
+from data.user import User
+from pages.registration_page import RegistrationPage
 
 
 def test_user_form():
@@ -18,7 +18,7 @@ def test_user_form():
                 'Vladimir street 12',
                 'Uttar Pradesh',
                 'Agra'
-            )
+                )
 
     page.open_browser()
     page.register_user(user)
