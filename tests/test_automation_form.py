@@ -13,7 +13,7 @@ def test_automation_form():
         .data_birth('28', 'May', '1995')
         .subjects('English')
         .hobbies('Sports')
-        .upload_picture('./images/111.jpg')
+        .upload_picture('111.jpg')
         .fill_user_address('Vladimir street 12')
         .choice_state()
         .choice_city()
